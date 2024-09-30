@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ProcesoGrud
+namespace ProcesoGrud.Presentacion
 {
-    public partial class Form1 : Form
+    public partial class frmProductos : Form
     {
-        public Form1()
+        public frmProductos()
         {
             InitializeComponent();
         }
