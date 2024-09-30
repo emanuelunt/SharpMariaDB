@@ -16,5 +16,46 @@ namespace ProcesoGrud.Presentacion
         {
             InitializeComponent();
         }
+
+        #region "Mis metodos"
+        private void limpir_Texto()
+        {
+            txtDescripcion.Text = "";
+            txtMarca.Text = "";
+            cmbMedida.Text = "";
+            cmbCategorias.Text = "";
+            txtStock_Actual.Text = "0.00";
+        }
+        private void estado_Texto(bool estado)
+        {
+            txtDescripcion.Enabled = estado;
+            txtMarca.Enabled = estado;
+            cmbMedida.Enabled = estado;
+            cmbCategorias.Enabled = estado;
+            txtStock_Actual.Enabled = estado;
+        }
+        private void estado_botonesProcesos(bool estado)
+        {
+            btnCancelar.Visible = estado;
+            btnGuardar.Visible = estado;
+        }
+        private void estado_botonesPrincipales(bool estado)
+        {
+            btnNuevo.Enabled = estado;
+            btnActualizar.Enabled = estado;
+            btnEliminar.Enabled = estado;
+            btnReporte.Enabled = estado;
+            btnSalir.Enabled = estado;          
+        }
+        #endregion
+
+        private void btnNuevo_Click(object sender, EventArgs e)
+        {
+            this.limpir_Texto();
+            this.estado_Texto(true);
+            this.estado_botonesProcesos(true);
+            this.estado_botonesPrincipales(false);
+            txtDescripcion.Focus();
+        }
     }
 }
