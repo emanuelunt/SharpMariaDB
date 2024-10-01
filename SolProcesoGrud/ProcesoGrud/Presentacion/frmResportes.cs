@@ -17,6 +17,13 @@ namespace ProcesoGrud.Presentacion
             InitializeComponent();
         }
 
+        #region "Mis Variables"
+        int nEstadoguarda = 0;
+        int nCodigo_pr = 0;
+        int nCodigo_me = 0;
+        int nCodigo_ca = 0;
+        #endregion
+
         #region "Mis metodos"
         private void limpir_Texto()
         {
@@ -51,11 +58,26 @@ namespace ProcesoGrud.Presentacion
 
         private void btnNuevo_Click(object sender, EventArgs e)
         {
+            nEstadoguarda = 1; // Nuevo registro
             this.limpir_Texto();
             this.estado_Texto(true);
             this.estado_botonesProcesos(true);
             this.estado_botonesPrincipales(false);
             txtDescripcion.Focus();
+        }
+
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            nEstadoguarda = 0;
+            this.limpir_Texto();
+            this.estado_Texto(false);
+            this.estado_botonesProcesos(false);
+            this.estado_botonesPrincipales(true);
+        }
+
+        private void btnSalir_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
