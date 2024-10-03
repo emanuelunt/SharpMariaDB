@@ -13,16 +13,16 @@ namespace ProcesoGrud.Datos
         private string servidor;
         private string puerto;
         private string usuario;
-        private string clave;
+        private string password;
         private static Conexion con = null;
 
         private Conexion() 
         {
-            this.basedeDatos = "bd_grud";
+            this.basedeDatos = "bd_crud";
             this.servidor = "127.0.0.1";
             this.puerto = "3306";
-            this.usuario = "";
-            this.clave = "";
+            this.usuario = "root";
+            this.password = "";
         }
 
         public MySqlConnection crearConexion()
@@ -31,8 +31,9 @@ namespace ProcesoGrud.Datos
 
             try
             {
-                cadena.ConnectionString = "datasource=" + this.servidor + ";port=" + this.puerto + ";username="+this.usuario+
-                    ";password=" + this.clave + ";Database=" + this.basedeDatos;
+                //cadena.ConnectionString = "datasource=" + this.servidor + ";port=" + this.puerto + ";username="+this.usuario+
+                //    ";password=" + this.clave + ";Database=" + this.basedeDatos;
+                cadena.ConnectionString = "Database=" + basedeDatos + "; Data Source=" + servidor + "; User Id=" + usuario + "; Password=" + password + "";
 
             }
             catch (Exception error)

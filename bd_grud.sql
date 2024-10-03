@@ -2,7 +2,7 @@
 -- Host:                         127.0.0.1
 -- Versión del servidor:         10.4.27-MariaDB - mariadb.org binary distribution
 -- SO del servidor:              Win64
--- HeidiSQL Versión:             12.1.0.6537
+-- HeidiSQL Versión:             12.8.0.6908
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -25,9 +25,12 @@ CREATE TABLE IF NOT EXISTS `tb_categorias` (
   `descripcion_ca` varchar(50) DEFAULT NULL,
   `activo` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idCategoria_ca`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla bd_crud.tb_categorias: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_crud.tb_categorias: ~2 rows (aproximadamente)
+INSERT INTO `tb_categorias` (`idCategoria_ca`, `descripcion_ca`, `activo`) VALUES
+	(1, 'Comestibles', b'1'),
+	(2, 'Bebidas', b'1');
 
 -- Volcando estructura para tabla bd_crud.tb_medidas
 CREATE TABLE IF NOT EXISTS `tb_medidas` (
@@ -35,9 +38,14 @@ CREATE TABLE IF NOT EXISTS `tb_medidas` (
   `descripcion_me` varchar(50) DEFAULT NULL,
   `activo` int(11) DEFAULT NULL,
   PRIMARY KEY (`idCodigo_me`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla bd_crud.tb_medidas: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla bd_crud.tb_medidas: ~4 rows (aproximadamente)
+INSERT INTO `tb_medidas` (`idCodigo_me`, `descripcion_me`, `activo`) VALUES
+	(1, 'Unidades', 1),
+	(2, 'Kilogromas', 1),
+	(3, 'Litros', 1),
+	(4, 'Metros', 1);
 
 -- Volcando estructura para tabla bd_crud.tb_productos
 CREATE TABLE IF NOT EXISTS `tb_productos` (
@@ -56,6 +64,71 @@ CREATE TABLE IF NOT EXISTS `tb_productos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Volcando datos para la tabla bd_crud.tb_productos: ~0 rows (aproximadamente)
+
+-- Volcando estructura para procedimiento bd_crud.usp_guardar_pr
+DELIMITER //
+CREATE PROCEDURE `usp_guardar_pr`(
+	IN `nOpcion` INT,
+	IN `nCodigo_pr` INT,
+	IN `cDescripcion_pr` VARCHAR(50),
+	IN `cMarca_pr` VARCHAR(50),
+	IN `nCodigo_me` INT,
+	IN `nCodigo_ca` INT,
+	IN `nStock_actual` DECIMAL(18,2)
+)
+BEGIN
+if nOpcion = 1 then -- nuevo Registro
+	INSERT INTO tb_productos(descripcion_pr,marca_pr,codigo_me,codigo_ca,stock_actual,activo)
+	VALUES(cDescripcion_pr,cMarca_pr,nCodigo_me,nCodigo_ca,nStock_actual,1);
+ELSE -- Actualizar registro
+	UPDATE tb_productos SET descripcion_pr = cDescripcion_pr,
+									marca_pr = cMarca_pr,
+									codigo_me = nCodigo_me,
+									codigo_ca = nCodigo_ca,
+									stock_actual = nStock_actual
+								WHERE idCodigo_pr = nCodigo_pr;
+END if;
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bd_crud.usp_listado_ca
+DELIMITER //
+CREATE PROCEDURE `usp_listado_ca`()
+BEGIN
+SELECT descripcion_ca,idCategoria_ca FROM tb_categorias WHERE activo = 1;
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bd_crud.usp_listado_me
+DELIMITER //
+CREATE PROCEDURE `usp_listado_me`()
+BEGIN
+SELECT descripcion_me, idCodigo_me FROM tb_medidas WHERE activo = 1;
+END//
+DELIMITER ;
+
+-- Volcando estructura para procedimiento bd_crud.usp_listado_pr
+DELIMITER //
+CREATE PROCEDURE `usp_listado_pr`(
+	IN `cTexto` VARCHAR(50)
+)
+BEGIN
+SELECT
+a.idCodigo_pr,
+a.descripcion_pr,
+a.marca_pr,
+b.descripcion_me,
+c.descripcion_ca,
+a.stock_actual,
+a.codigo_me,
+a.codigo_ca 
+FROM tb_productos AS a INNER JOIN tb_medidas AS b ON a.codigo_me=b.idCodigo_me
+INNER JOIN tb_categorias AS c ON a.codigo_ca=c.idCategoria_ca
+WHERE a.activo=1 AND upper(CONCAT(CAST(a.idCodigo_pr AS CHAR),
+											trim(a.descripcion_pr),
+											trim(a.marca_pr))) LIKE CONCAT('%',upper(trim(cTexto)),'%');
+END//
+DELIMITER ;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -18,13 +18,69 @@ namespace ProcesoGrud.Datos
             try
             {
                 sqlCon = (Conexion.getInstacia()).crearConexion();
-                MySqlCommand comando = new MySqlCommand("", sqlCon);
-
-
+                MySqlCommand comando = new MySqlCommand("usp_listado_pr", sqlCon);
+                comando.CommandType = CommandType.StoredProcedure;
+                comando.Parameters.Add("cTexto", MySqlDbType.VarChar).Value=ctexto;
+                sqlCon.Open();
+                resultado = comando.ExecuteReader();
+                tabla.Load(resultado);
+                return tabla;
             }
             catch (Exception error)
             {
-                  throw error
+                throw error;
+            }
+            finally
+            {
+                if (sqlCon.State == ConnectionState.Open)
+                    sqlCon.Close();
+            }
+        }
+
+        public DataTable listado_me()
+        {
+            MySqlDataReader resultado;
+            DataTable tabla = new DataTable();
+            MySqlConnection sqlCon = new MySqlConnection();
+            try
+            {
+                sqlCon = (Conexion.getInstacia()).crearConexion();
+                MySqlCommand comando = new MySqlCommand("usp_listado_me", sqlCon);
+                comando.CommandType = CommandType.StoredProcedure;                
+                sqlCon.Open();
+                resultado = comando.ExecuteReader();
+                tabla.Load(resultado);
+                return tabla;
+            }
+            catch (Exception error)
+            {
+                throw error;
+            }
+            finally
+            {
+                if (sqlCon.State == ConnectionState.Open)
+                    sqlCon.Close();
+            }
+        }
+
+        public DataTable listado_ca()
+        {
+            MySqlDataReader resultado;
+            DataTable tabla = new DataTable();
+            MySqlConnection sqlCon = new MySqlConnection();
+            try
+            {
+                sqlCon = (Conexion.getInstacia()).crearConexion();
+                MySqlCommand comando = new MySqlCommand("usp_listado_ca", sqlCon);
+                comando.CommandType = CommandType.StoredProcedure;
+                sqlCon.Open();
+                resultado = comando.ExecuteReader();
+                tabla.Load(resultado);
+                return tabla;
+            }
+            catch (Exception error)
+            {
+                throw error;
             }
             finally
             {
